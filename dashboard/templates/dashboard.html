@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Page</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'dashboard.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Encode Sans Semi Condensed' rel='stylesheet'>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Encode Sans Semi Condensed' rel='stylesheet'>
+</head>
+<body>
+
+    <div class="container-dashboard">
+        <div class="container-dashboard-child">
+            <div id="settings-container" style="display: none;">
+                <div class = "notification-settings">
+                    <div class = "form-box">
+                    <div class = "current-values">
+                        <h3>Thresholds for real-time data:</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="temperature-min">Temperature Min:</label>
+                              <input type="number" id="temperature-min" name="temperature-min" value="{{ temperature_min }}">
+                            </div>
+                            <div class="form-group">
+                              <label for="temperature-max">Temperature Max:</label>
+                              <input type="number" id="temperature-max" name="temperature-max" value="{{ temperature_max }}">
+                            </div>
+                            <div class="form-group">
+                              <label for="voltage-min">Voltage Min:</label>
+                              <input type="number" id="voltage-min" name="voltage-min" value="{{ voltage_min }}">
+                            </div>
+                            <div class="form-group">
+                              <label for="voltage-max">Voltage Max:</label>
+                              <input type="number" id="voltage-max" name="voltage-max" value="{{ voltage_max }}">
+                            </div>
+                            <button type="submit" id="current-submit">Set Values</button>
+                          </form>
+                    </div>
+                    <div class = "predicted-values">
+                        <h3>Thresholds for predicted data:</h3>
+                        <form>
+                            <div class="form-group">
+                              <label for="voltage-min">Voltage Min:</label>
+                              <input type="number" id="voltage-min" name="voltage-min">
+                            </div>
+                            <div class="form-group">
+                              <label for="voltage-max">Voltage Max:</label>
+                              <input type="number" id="voltage-max" name="voltage-max">
+                            </div>
+                            <button type="submit" id = "predicted-submit">Set Values</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="notifications-container">
+                <p class = "notification-message"></p>
+                <div class="notifications">
+                    
+                    <img src="{% static 'notification_icon.png' %}" alt="Notification" class = "notifications-icon" title = "Setup a new notification" onclick="toggleSettings()">
+                </div>
+            </div>
+            <div class="first-inline">
+                <div class = "temperature-picture">
+                <div class="temperature">
+</div>
+                <div class="temperature-box">
+                    <div class ="temperature-text">
+                        <p>Temperature</p>
+                    </div>
+                    <div id = "temperature"></div>
+                </div>
+            </div>
+                <div class="prediction">
+                    <div class = "predicted-container" style="overflow-x: scroll; overflow-y: hidden">
+                        <p>Predicted Energy Production</p>
+                        <div class = "predicted-graph-container" style="position: relative; height:32vh; width:150vw">
+                        <canvas id="predictedGraph"></canvas>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="second-inline">
+
+                <div class="real-time">
+                    <div class = "real-time-container">
+                        <p>Real Time Energy Production</p>
+                    </div>
+                    <canvas id="energyGraph"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+
+    <script>
+
+
+        function updateTemperature() {
+            $.get("/dashboard/get_temperature/", function(data) {
+                $("#temperature").html(data.temperature + "&deg;C");
+            });
+        }
+        
+        $(document).ready(function() {
+            // Call updateTemperature once when the page is loaded
+            updateTemperature();
+    
+            // Call the updateTemperature function every 15 seconds
+           setInterval(updateTemperature, 15000);
+        });
+
+        $(document).ready(function() {
+            // Chart.js configuration
+            var ctx = document.getElementById('energyGraph').getContext('2d');
+            var chart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: [],
+                datasets: [{
+                  label: 'Voltage',
+                  position: 'right',
+                  data: [],
+                  borderColor: '#1D67B1',
+                  backgroundColor: '#fff',
+                  borderWidth: 2,
+                  pointRadius: 0,
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 20,
+                    stepSize: 1
+                    }
+                  }
+                
+              }
+            });
+        
+            // Function to update energy data
+            function updateEnergyData() {
+                $.get("/dashboard/get_voltage/", function(data) {
+                  console.log(data); // Debug statement
+                  var rows = data;
+                  var lastTenRows = rows.slice(-10);
+                  var voltageData = lastTenRows.map(row => parseFloat(row.Voltage));
+                  var dateLabels = lastTenRows.map(row => new Date(row.Date).toLocaleTimeString('en-US', {hour12:false}));
+                  chart.data.labels = dateLabels.reverse();
+                  chart.data.datasets[0].data = voltageData.reverse();
+                  chart.data.datasets[0].pointStyle = 'circle';
+                  chart.data.datasets[0].pointRadius = 3;
+                  chart.data.datasets[0].pointBackgroundColor = 'blue';
+                  chart.options.plugins.legend.align = 'end';
+                  chart.update();
+                });
+              }
+          
+            // Call updateEnergyData once when the page is loaded
+            updateEnergyData();
+          
+            // Call the updateEnergyData function every 15 seconds
+            setInterval(updateEnergyData, 1000);
+          });
+
+
+
+          $(document).ready(function() {
+            // Chart.js configuration
+            var ctx = document.getElementById('predictedGraph').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Voltage',
+                        data: [],
+                        borderColor: '#1D67B1',
+                        backgroundColor: '#fff',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                    },
+                    {
+                        label: 'Wind Speed',
+                        data: [],
+                        borderColor: '#FFA500',
+                        backgroundColor: '#fff',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 20,
+                            stepSize: 2
+                            },
+                    }
+                }
+            });
+            
+            
+// Function to update energy data
+function updatePredictedEnergyData() {
+  $.get("/dashboard/get_predicted_data/", function(data) {
+    console.log(data); // Debug statement
+    var rows = data;
+    var currentDate = new Date();
+    var nextDay = new Date(currentDate.getTime() + (24 * 60 * 60 * 1000));
+    var filteredRows = rows.filter(row => {
+      const localDate = new Date(row.Date);
+      const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60 * 1000);
+      return utcDate >= currentDate && utcDate <= nextDay;
+    });
+    var voltageData = filteredRows.map(row => parseFloat(row.Predicted_voltage));
+    var windSpeedData = filteredRows.map(row => parseFloat(row.Windspeed));
+    var dateLabels = filteredRows.map(row => {
+      const localDate = new Date(row.Date);
+      const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60 * 1000);
+      const options = { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' };
+      return utcDate.toLocaleString('en-US', options);
+    });
+    chart.data.labels = dateLabels;
+    chart.data.datasets[0].data = voltageData;
+    chart.data.datasets[1].data = windSpeedData;
+    chart.data.datasets[0].pointStyle = 'circle';
+    chart.data.datasets[0].pointRadius = 3;
+    chart.data.datasets[0].pointBackgroundColor = 'blue';
+    chart.data.datasets[1].pointStyle = 'circle';
+    chart.data.datasets[1].pointRadius = 3;
+    chart.data.datasets[1].pointBackgroundColor = 'orange';
+    chart.options.plugins.legend.align = 'end';
+    chart.options.barPercentage = 0.8;
+    chart.options.maxBarThickness = 30;
+    chart.update();
+  });
+}
+  
+  // Call updateEnergyData once when the page is loaded
+  updatePredictedEnergyData();
+  
+  // Call the updateEnergyData function every 15 seconds
+  setInterval(updatePredictedEnergyData, 1000);
+        });
+
+
+
+
+
+          function toggleSettings() {
+            var settingsContainer = document.getElementById("settings-container");
+            if (settingsContainer.style.display === "none") {
+                settingsContainer.style.display = "block";
+            } else {
+                settingsContainer.style.display = "none";
+            }
+        }
+
+        const messageElement = document.querySelector('.notification-message');
+        let messages = []; // an array to store all the messages
+        let messageIndex = 0; // index of the message currently being displayed
+        
+        // update the message every second
+        setInterval(() => {
+          if (messages.length > 0) {
+            // show the next message in the array
+            messageElement.textContent = messages[messageIndex];
+            // move to the next message in the array
+            messageIndex = (messageIndex + 1) % messages.length;
+          } else {
+            // no messages, clear the content of the element
+            messageElement.textContent = 'No threshold values are breached';
+          }
+        }, 1000);
+        
+        function fetchTemperatureData() {
+          const temperatureUrl = "/dashboard/get_temperature/";
+          fetch(temperatureUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status !== 'within_range') {
+                messages.push(data.message);
+              } else {
+                // remove messages related to temperature from the array
+                messages = messages.filter(message => !message.includes("Temperature"));
+              }
+            });
+        }
+        
+        function fetchVoltageData() {
+          const voltageUrl = "/dashboard/get_voltage/";
+          fetch(voltageUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              const lastDataPoint = data[0]; // get the last element from the array
+              if (lastDataPoint.status !== 'within_range') {
+                messages.push(lastDataPoint.message);
+              } else {
+                // remove messages related to voltage from the array
+                messages = messages.filter(message => !message.includes("Voltage"));
+              }
+            });
+        }
+        
+        // fetch the data and check the thresholds every 15 seconds
+       setInterval(() => {
+          fetchTemperatureData();
+         fetchVoltageData();
+        }, 2000);
+        
+</script>
+
+
+</body>
+</html>
+
