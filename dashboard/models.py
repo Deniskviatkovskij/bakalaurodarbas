@@ -5,22 +5,18 @@ from django.contrib.auth.models import User
 
 class Thresholds(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    temperature_min = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-    temperature_max = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-    voltage_min = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-    voltage_max = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-    predicted_voltage_min = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-    predicted_voltage_max = models.DecimalField(max_digits=5, decimal_places=1, null=True)
-
-    def __str__(self):
-        return f'Thresholds for {self.user.username}'
+    temperature_min = models.DecimalField(max_digits=5, decimal_places=1, default=('0.00'))
+    temperature_max = models.DecimalField(max_digits=5, decimal_places=1, default=('30.00'))
+    power_min = models.DecimalField(max_digits=5, decimal_places=1, default=('0.00'))
+    power_max = models.DecimalField(max_digits=5, decimal_places=1, default=('20.00'))
 
 
 class LayoutData(models.Model):
     ID = models.IntegerField(primary_key=True)
     temperature = models.DecimalField(max_digits=5, decimal_places=1)
-    humidity = models.DecimalField(max_digits=5, decimal_places=1)
     voltage = models.DecimalField(max_digits=5, decimal_places=1)
+    current = models.DecimalField(max_digits=5, decimal_places=1)
+    power = models.DecimalField(max_digits=5, decimal_places=1)
     date = models.DateTimeField()
     user_id = models.IntegerField()
 

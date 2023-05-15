@@ -7,7 +7,7 @@
 body {
     height: 100%;
     width: 100%;
-    background-color: #E0E0E0;
+    background-color: #E7ECEF;
 }
 
 .container-dashboard {
@@ -17,12 +17,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 .container-dashboard-child {
     position: relative;
     height: 85%;
-    width: 75%;
+    width: 90%;
     margin: auto;
     box-sizing: border-box;
     display: flex;
@@ -31,32 +32,46 @@ body {
 .first-inline {
     position: relative;
     width: 100%;
-    height: 45%;
+    height: 43%;
     margin-top: 1.5em;
     top: 8%;
     display: flex;
     justify-content: space-between;
-
 }
 
 .first-inline .temperature-picture {
-    background-color: #fff;
-    width: 25%;
-    height: 100%;
+    background: #FFFFFF;
+    box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+    border-radius: 15px;
+    width: 100%;
+    height: 47%;
     align-items: center;
     display: flex;
     justify-content: center;
-    background-image: url('../static/turbine2.jpg');
-    background-size: 55vh;
+    background-image: url('../static/turbine2-removebg-preview.png');
+    background-size: cover;
     background-repeat: no-repeat;
 }
 
+.first-inline .new-box {
+    background: #FFFFFF;
+    box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+    border-radius: 15px;
+    width: 100%;
+    height: 47%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
 
 
 
 .first-inline .prediction {
-    background-color: #fff;
-    width: 73%;
+    background: #FFFFFF;
+    box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+    border-radius: 15px;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -65,11 +80,13 @@ body {
 }
 
 .second-inline {
-    background-color: #fff;
+    background: #FFFFFF;
+    box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+    border-radius: 19px;
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 40%;
+    height: 42%;
     margin-top: auto;
     justify-content: center;
     display: flex;
@@ -77,6 +94,8 @@ body {
 
 .notifications-container {
     background-color: #1D67B1;
+    box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+border-radius: 10px;
     position: absolute;
     width: 100%;
     height: 8%;
@@ -110,43 +129,39 @@ body {
     font-family: 'Nunito Sans';
     font-style: normal;
     font-weight: 650;
-    font-size: 18px;
+    font-size: 17px;
     line-height: 18px;
     color: #3D4857;
+    margin: 5px;
 }
 
 #temperature {
     font-family: 'Encode Sans Semi Condensed';
 font-style: normal;
 font-weight: 400;
-font-size: 5.3vw;
-line-height: 125px;
+font-size: 4vw;
 display: flex;
 color: #1D67B1;
-background-color: #e0e0e0c6;
-padding: 0.5em 0.2em;
+background-color: #eef2f6cf;
+box-shadow: 0px -4px 24px rgba(165, 164, 164, 0.618);
+border-radius: 10px;
+padding: 0.02em 0.2em;
 
 }
 
 
 
-@media (max-width: 768px) {
-    #temperature {
-        font-size: 60px;
-        line-height: 75px;
-    }
-}
 
 @media (max-width: 480px) {
     #temperature {
         font-size: 40px;
-        line-height: 50px;
+
     }
 }
 
 .real-time {
     width: 95%;
-    height: 85%;
+    height: 100%;
     bottom: 0;
 
 }
@@ -241,10 +256,11 @@ color: #FFFFFF;
 
 .form-box {
         background-color: #e0e0e0a9;
-        padding: 1em;
-        width: 50%;
+        box-shadow: 0px -4px 24px rgba(236, 236, 236, 0.5);
+border-radius: 15px;
+        padding: 3em 1.2em;
+        width: 35%;
         position: absolute;
-        height: 100%;
         overflow: auto;
     }  
 
@@ -325,6 +341,291 @@ font-size: 1rem;
 
 
 .predicted-graph-container {
-    height: 95%;
+    height: 90%;
     width: 100%;
 }
+
+.real-time-container {
+    height: 100%;
+    width: 100%; 
+}
+
+@media (max-width: 782px) {
+    .container-dashboard-child {
+        position: relative;
+        height: 100% !important;
+        width: 100%;
+        margin: auto;
+        box-sizing: border-box;
+        display: flex;
+        overflow: scroll !important;
+    }}
+
+    @media (max-width: 782px) {
+    .first-inline {
+        position: relative;
+        width: 100% !important;
+        height: 56% !important;
+        margin-top: 1.5em;
+        margin-bottom: auto;
+        top: 7%;
+        display: flex;
+        flex-direction: column;
+    }}
+
+    @media (max-width: 782px) {
+        .form-box {
+            width: 100% !important;
+        }}
+
+    @media (max-width: 782px) {
+        .first-inline .prediction {
+            width: 100% !important;
+        }}
+        @media (max-width: 782px) {
+        .second-inline {
+            background: #FFFFFF;
+            box-shadow: 0px -4px 24px rgb(236 236 236 / 50%);
+            border-radius: 19px;
+            position: absolute;
+            bottom: 1em !important;
+            width: 100%;
+            height: 30% !important;
+            margin-top: auto;
+            justify-content: center;
+            display: flex;
+        }}
+
+
+        @media (max-width: 782px) {
+        .first-inline .temperature-picture {
+            width: 100%;
+            background-image: none;
+            background: transparent;
+        }}
+
+        @media (max-width: 782px) {
+        #temperature {
+            font-size: 10vw !important;
+            padding: 1em 0.6em !important;
+        }}
+        
+        @media (max-width: 782px) {
+        .temperature-text p {
+            font-size: 3vw;
+            line-height: normal;
+
+        }}
+        @media (max-width: 782px) {
+        .notifications-container p {
+            font-size: 3vw;
+
+        }}
+
+        @media (max-width: 782px) {
+        .notifications-icon {
+            height: 22px;
+        }}
+
+        @media (max-width: 782px) {
+        .predicted-container p {
+            font-size: 3vw;
+        }}
+
+        @media (max-width: 782px) {
+        .real-time-container p {
+            font-family: 'Nunito Sans';
+            font-style: normal;
+            font-weight: 650;
+            font-size: 3vw;
+        }}
+
+
+        @media (max-width: 782px) {
+        .predicted-graph-container {
+            width: 95% !important;
+        }}
+
+        .real-time::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+            background-color: #f5f5f5;
+          }
+          
+          .real-time::-webkit-scrollbar-thumb {
+            background-color: #aaa;
+            border-radius: 5px;
+          }
+
+
+
+        
+.first-inline .boxes-container {
+    display: flex;
+    flex-direction: column;
+    width: 16%;
+    height: 100%;
+    align-items: center;
+    margin-right: 1%;
+    border-radius: 15px;
+}
+
+.new-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .new-box-value {
+    order: 1;
+    font-family: 'Encode Sans Semi Condensed';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 2vw;
+    color: #1D67B1;
+    background-color: #eef2f6cf;
+    box-shadow: 0px -4px 18px rgb(165 164 164 / 62%);
+    border-radius: 10px;
+    padding: 0.5em 0.4em;
+  }
+  
+  .new-box-text p {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 650;
+    font-size: 17px;
+    line-height: 18px;
+    color: #3D4857;
+    margin: 5px;
+    text-align: center;
+  }
+
+@media (max-width: 782px) {
+    .first-inline .boxes-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 75% !important;
+        align-items: center;
+        margin-right: 1%;
+        background-color: #fff;
+        margin-bottom: 5%;
+        padding-bottom: 3%;
+
+}
+    
+}
+
+@media (max-width: 782px) {
+    .new-box {
+margin-top: unset !important;
+background: none !important;
+}
+    
+}
+
+@media (max-width: 782px) {
+    .new-box-text p {
+        font-size: 3vw;
+    }
+}
+ 
+
+@media (max-width: 782px) {
+    .new-box-value {
+        font-size: 8vw;
+        padding: 1.4em 0.3em;
+}
+    
+}
+
+@media (max-width: 782px) {
+    .notifications-container .notifications {
+        padding: 0 0.5em !important;
+}
+    
+}
+
+@media (max-width: 782px) {
+.notifications-container img {
+    margin: 0 !important;
+}}
+
+@media (max-width: 782px) {
+    .notifications-container {
+        border-radius: 0 !important;
+    }}
+
+
+    @media (max-width: 782px) {
+        .real-time-container {
+            height: 25vh !important;
+        }}
+
+
+        @media (max-height: 601px) {
+            .first-inline .temperature-picture {
+                background-image: none !important;
+            }}
+
+
+                @media (max-height: 601px) {
+                    .notifications-container p {
+                        font-size: 15px !important;
+                    }}
+    
+                    @media (max-height: 601px) {
+                    .new-box-text p {
+                        font-size: 15px;
+                    }}
+                    @media (max-height: 601px) {
+                    .temperature-text p {
+                        font-size: 15px;
+                    }}
+
+                    @media (max-height: 601px) {
+                    .predicted-container p {
+                        font-size: 15px;
+                    }}
+
+                    @media (max-height: 601px) {
+                    .real-time-container p {
+                        font-size: 15px;
+                    }}
+
+
+                    #temperature.temperature-red {
+                        color: red !important;
+
+                      }
+
+
+                      #logout-btn {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        display: flex;
+                        
+                      }
+
+                      
+                      #logout-btn p{
+                        margin-right: 5px;
+                        font-family: 'Nunito Sans';
+                        font-style: normal;
+                        font-weight: 400;
+                      }
+
+
+                      #logout-btn button{
+                        margin-right: 5px;
+                        font-family: 'Nunito Sans';
+                        font-style: normal;
+                        font-weight: 400;
+                        padding: 1px 4px;
+                        background-color: #eef2f6cf;
+                        border-width: 1px;
+                        cursor: pointer;
+                      }
+
+                      

@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-gvzq#d+=zk=78&(_ltckhsw16u&oj6$4uxw8u$q3vvo$adc+$6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'a230-90-140-230-60.ngrok-free.app']
 
 
 # Application definition
@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'windapp.urls'
@@ -84,8 +85,8 @@ DATABASES = {
         'NAME': 'bakalaurinis',
         'USER': 'admin',
         "PASSWORD": 'bakalauras',
-        "HOST": 'database-1.csrajsjhoemp.us-east-1.rds.amazonaws.com',
-        'PORT': '3307',
+        "HOST": 'database-2.csrajsjhoemp.us-east-1.rds.amazonaws.com',
+        'PORT': '3308',
     }
 }
 

@@ -2,14 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login Page</title>
+  <link rel="icon" href="../static/Group.png" type="image/icon type">
   {% load static %}
   <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
   <link href='https://fonts.googleapis.com/css?family=Encode Sans Semi Condensed' rel='stylesheet'>
 </head>
 <body>
     <section class = "login_page_section">
+        <div class= "background">
   <div class="background-image"></div>
+        </div>
   <div class ="half-container">
   <div class="login-container">
     <div class="login-child-container">
@@ -27,17 +31,14 @@
                 </div>
                 <div class="form-group-split">
                 <button type="submit" class="btn btn-primary">Next</button>
-                <div class="forgot-password">
-                    <a href="#">Forgot Password?</a>
-                  </div>
                 </div>
             </form>
             {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
         </div>
         <div class="copy-container">
