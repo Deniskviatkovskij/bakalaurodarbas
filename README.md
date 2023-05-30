@@ -1,2 +1,2 @@
-# bakalaurogit
+# Bakalauro baigiamasis darbas
 Bakalauro darbas | VĖJO JĖGAINĖS PARAMETRŲ STEBĖJIMO SISTEMOS MAKETAS | MODEL OF WIND TURBINE PARAMETERS MONITORING SYSTEM
