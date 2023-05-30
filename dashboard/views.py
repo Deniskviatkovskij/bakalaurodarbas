@@ -40,7 +40,6 @@ def dashboard_view(request):
     power_min = thresholds.power_min if thresholds.power_min is not None else ''
     power_max = thresholds.power_max if thresholds.power_max is not None else ''
 
-
     return render(request, 'dashboard.html', {
         'thresholds': thresholds,
         'temperature_min': temperature_min,
@@ -88,7 +87,7 @@ def get_temperature(request):
         thresholds = get_object_or_404(Thresholds, user_id=user_id)
         min_temperature = thresholds.temperature_min
         max_temperature = thresholds.temperature_max
-        temperature = Decimal(str(temperature)) # Convert the temperature to a Decimal
+        temperature = Decimal(str(temperature))
         if temperature < min_temperature:
             status = "below_min"
             message = "Temperature is below the minimum threshold value."
@@ -124,7 +123,7 @@ def get_power(request):
     min_power = thresholds.power_min
     max_power = thresholds.power_max
     for data_point in power_data:
-        power = Decimal(str(data_point['Power']))  # konveruoja i decimal
+        power = Decimal(str(data_point['Power']))
         if power < min_power:
             data_point['status'] = "below_min"
             data_point['message'] = "Energy production is below the minimum threshold value."

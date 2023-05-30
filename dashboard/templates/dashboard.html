@@ -42,19 +42,19 @@
                             <input type="hidden" name="form_type" value="form1">
                             <div class="form-group">
                               <label for="temperature-min">Temperature Min:</label>
-                              <input type="number" id="temperature-min" name="temperature-min" value="{{ temperature_min }}">
+                              <input type="number" id="temperature-min" step="0.1" name="temperature-min" value="{{ temperature_min }}">
                             </div>
                             <div class="form-group">
                               <label for="temperature-max">Temperature Max:</label>
-                              <input type="number" id="temperature-max" name="temperature-max" value="{{ temperature_max }}">
+                              <input type="number" id="temperature-max" step="0.1" name="temperature-max" value="{{ temperature_max }}">
                             </div>
                             <div class="form-group">
                               <label for="power-min">Power Min:</label>
-                              <input type="number" id="power-min" name="power-min" value="{{ power_min }}">
+                              <input type="number" id="power-min" step="0.1" name="power-min" value="{{ power_min }}">
                             </div>
                             <div class="form-group">
                               <label for="power-max">Power Max:</label>
-                              <input type="number" id="power-max" name="power-max" value="{{ power_max }}">
+                              <input type="number" id="power-max" step="0.1" name="power-max" value="{{ power_max }}">
                             </div>
                             <button type="submit" id="current-submit">Set Values</button>
                           </form>
@@ -99,7 +99,7 @@
             <div class="second-inline">
 
                 <div class="real-time" style="overflow-x: scroll; overflow-y: hidden"> 
-                    <div class = "real-time-container" style="position: relative;  width:280vh; height:29vh">
+                    <div class = "real-time-container" style="position: relative;  width:780vh; height:29vh">
                         <p>Predicted Energy Production</p>
                     
                     <canvas id="predictedGraph" style="width:600px"></canvas>
@@ -116,7 +116,7 @@
 
         function updateTemperature() {
             $.get("/dashboard/get_temperature/", function(data) {
-                console.log(data); // Debug statement
+                console.log(data);
                 $("#temperature").html(data.temperature + "&deg;C");
             });
         }
@@ -125,12 +125,11 @@
             // Call updateTemperature once when the page is loaded
             updateTemperature();
     
-            // Call the updateTemperature function every 15 seconds
+            // Call the updateTemperature function every x seconds
            setInterval(updateTemperature, 1000);
         });
 
         $(document).ready(function() {
-            // Chart.js configuration
             var ctx = document.getElementById('energyGraph').getContext('2d');
             var chart = new Chart(ctx, {
               type: 'line',
@@ -153,6 +152,10 @@
                 y: {
                     min: 0,
                     suggestedMax: 1,
+                    title: {
+                      display: true,
+                      text: 'Power, W'
+                    },
                     stepSize: 1
                     }
                   }
@@ -163,7 +166,7 @@
             // Function to update energy data
             function updateEnergyData() {
                 $.get("/dashboard/get_power/", function(data) {
-                  console.log(data); // Debug statement
+                  console.log(data);
                   var rows = data;
                   var lastTenRows = rows.slice(-10);
                   var powerData = lastTenRows.map(row => parseFloat(row.Power));
@@ -190,44 +193,62 @@
           $(document).ready(function() {
             var ctx = document.getElementById('predictedGraph').getContext('2d');
             var chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Voltage',
-                        data: [],
-                        borderColor: '#1D67B1',
-                        backgroundColor: '#fff',
-                        borderWidth: 2,
-                        pointRadius: 0,
+              type: 'line',
+              data: {
+                labels: [],
+                datasets: [{
+                  label: 'Power',
+                  data: [],
+                  yAxisID: 'power', 
+                  borderColor: '#1D67B1',
+                  backgroundColor: '#fff',
+                  borderWidth: 2,
+                  pointRadius: 0,
+                }, {
+                  label: 'Wind Speed',
+                  data: [],
+                  yAxisID: 'wind', 
+                  borderColor: '#FFA500',
+                  backgroundColor: '#fff',
+                  borderWidth: 2,
+                  pointRadius: 0,
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  power: {
+                    type: 'linear',
+                    position: 'left',
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Power, W'
                     },
-                    {
-                        label: 'Wind Speed',
-                        data: [],
-                        borderColor: '#FFA500',
-                        backgroundColor: '#fff',
-                        borderWidth: 2,
-                        pointRadius: 0,
-                    }]
+                    stepSize: 1
+                  },
+                  wind: {
+                    type: 'linear',
+                    position: 'right',
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: 'Wind Speed, m/s'
+                    },
+                    grid: {
+                      drawOnChartArea: false
+                    },
+                  },
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: 5,
-                            stepSize: 1
-                            },
-                    }
-                }
+              },
             });
             
             
 // Function to update energy data
 function updatePredictedEnergyData() {
   $.get("/dashboard/get_predicted_data/", function(data) {
-    console.log(data); // Debug statement
+    console.log(data);
     var rows = data;
     var currentDate = new Date();
     var nextDay = new Date(currentDate.getTime() + (24 * 60 * 60 * 1000));
@@ -270,7 +291,7 @@ function updatePredictedEnergyData() {
   // Call updateEnergyData once when the page is loaded
   updatePredictedEnergyData();
   
-  // Call the updateEnergyData function every 15 seconds
+  // Call the updateEnergyData function every x seconds
   setInterval(updatePredictedEnergyData, 20000);
         });
 
@@ -322,26 +343,31 @@ function updatePredictedEnergyData() {
               });
           }
         
-        function fetchPowerData() {
-          const powerUrl = "/dashboard/get_power/";
-          fetch(powerUrl)
-            .then((response) => response.json())
-            .then((data) => {
-              const lastDataPoint = data[0]; // get the last element from the array
-              if (lastDataPoint.status !== 'within_range') {
-                messages.push(lastDataPoint.message);
-              } else {
-                // remove messages related to power from the array
-                messages = messages.filter(message => !message.includes("Power"));
-              }
-            });
-        }
+          function fetchPowerData() {
+            const powerUrl = "/dashboard/get_power/";
+            fetch(powerUrl)
+              .then((response) => response.json())
+              .then((data) => {
+                const lastDataPoint = data[0];
+                if (lastDataPoint.status !== 'within_range') {
+                  messages.push(lastDataPoint.message);
+                } else {
+                  // remove messages related to power from the array
+                  messages = messages.filter(message => !message.includes("Energy production"));
+                }
+                
+                // update the threshold message element
+                if (messages.length > 0) {
+                  messageElement.textContent = messages[messageIndex];
+                }
+              });
+          }
         
-        // fetch the data and check the thresholds every 15 seconds
-       setInterval(() => {
+        // fetch the data and check the thresholds every x seconds
+        setInterval(() => {
           fetchTemperatureData();
-         fetchPowerData();
-        }, 3000);
+          fetchPowerData();
+        }, 1000);
         
 
         function updatePredictedData() {
@@ -364,7 +390,7 @@ function updatePredictedEnergyData() {
             // Call updatePredictedData once when the page is loaded
             updatePredictedData();
           
-            // Call the updatePredictedData function every 15 seconds
+            // Call the updatePredictedData function every x seconds
             setInterval(updatePredictedData, 20000);
           });
 
